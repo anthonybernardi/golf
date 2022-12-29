@@ -47,9 +47,8 @@ export class Golf {
     const targetHole: Card[] = this.holes[hole - 1];
     const targetCard: Card = targetHole[targetHole.length - 1];
 
-    if (!validMove(foundationCard, targetCard, this.aroundCorner)) {
-      throw new Error('The chosen card must be one away from the current foundation card!');
-    }
+    const valid = validMove(foundationCard, targetCard, this.aroundCorner);
+    if (!valid) throw new Error('The chosen card must be one away from the current foundation card!');
 
     targetHole.pop();
     this.foundation.push(targetCard);
@@ -61,7 +60,8 @@ export class Golf {
     output += '[1]\t[2]\t[3]\t[4]\t[5]\t[6]\t[7]\n';
     for (let i = 0; i < 5; i++) {
       for (let j = 0; j < 7; j++) {
-        output += this.holes[j][i].toString() + '\t';
+        const card = this.holes[j][i];
+        output += (card ? card.toString() : '') + '\t';
       }
       output += '\n';
     }
