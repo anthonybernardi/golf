@@ -1,18 +1,17 @@
 import { Card, Deck } from './src/deck';
 import { Golf, validMove } from './src/golf';
 
-let successful = false;
-while (!successful) {
+const golf: Golf = new Golf(true);
+
+while (golf.gameState === 'Playing') {
   try {
-    const golf = new Golf(true);
-    const state1 = golf.toString();
-
-    golf.play(1);
-    const state2 = golf.toString();
-
-    console.log(state1);
+    console.log(golf.toString());
     console.log('\n\n');
-    console.log(state2);
-    successful = true;
+    const moves: number[] = golf.getValidMoves();
+    if (moves.length > 0) {
+      golf.play(moves[Math.floor(Math.random() * moves.length)]);
+    } else {
+      golf.draw();
+    }
   } catch (e: unknown) {}
 }

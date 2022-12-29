@@ -1,5 +1,7 @@
 import { Card, Deck } from './deck';
 
+export type GameState = 'Playing' | 'Lost' | 'Won';
+
 export function validMove(card1: Card, card2: Card, aroundCorner: boolean): boolean {
   const diff = Math.abs(card1.value - card2.value);
   if (diff === 1 || (aroundCorner && diff === 12)) return true;
@@ -11,6 +13,7 @@ export class Golf {
   aroundCorner: boolean;
   holes: Card[][];
   foundation: Card[];
+  gameState: GameState;
 
   constructor(aroundCorner?: boolean, deck?: Deck) {
     this.aroundCorner = !!aroundCorner;
@@ -28,6 +31,7 @@ export class Golf {
     this.holes = holes;
 
     this.foundation = [this.deck.next()];
+    this.gameState = 'Playing';
   }
 
   public getTopFoundation(): Card {
@@ -52,6 +56,34 @@ export class Golf {
 
     targetHole.pop();
     this.foundation.push(targetCard);
+
+    const cardsLeftInHoles = this.getCardsLeftInHoles();
+    if (cardsLeftInHoles === 0 || (this.getValidMoves().length === 0 && this.deck.cards.length === 0)) {
+      this.gameState = cardsLeftInHoles > 0 ? 'Lost' : 'Won';
+    }
+  }
+
+  public draw() {
+    if (this.deck.cards.length === 0) throw new Error('The deck is empty!');
+    this.foundation.push(this.deck.next());
+  }
+
+  /**
+   * Get the current valid moves.
+   * @returns a list of the hole numbers (1-7) that are valid moves
+   */
+  public getValidMoves(): number[] {
+    const moves: number[] = [];
+    this.holes.forEach((hole: Card[], index: number) => {
+      const targetCard: Card = hole[hole.length - 1];
+      if (targetCard && validMove(this.getTopFoundation(), targetCard, this.aroundCorner)) moves.push(index + 1);
+    });
+
+    return moves;
+  }
+
+  public getCardsLeftInHoles(): number {
+    return this.holes.reduce((partialSum: number, currentHole: Card[]) => partialSum + currentHole.length, 0);
   }
 
   public toString() {
@@ -70,9 +102,5 @@ export class Golf {
     output += `Foundation: ${this.getTopFoundation().toString()}`;
 
     return output;
-  }
-
-  public gameState() {
-    return true;
   }
 }
