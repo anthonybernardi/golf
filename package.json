@@ -21,7 +21,7 @@
   },
   "scripts": {
     "test": "jest",
-    "go": "ts-node ./src/index.ts"
+    "go": "ts-node -T ./index.ts"
   },
   "eslintConfig": {
     "extends": [
