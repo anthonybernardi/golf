@@ -1,7 +1,7 @@
 import { Golf } from './golf';
 
-function playGolf(shouldLog: boolean) {
-  const golf: Golf = new Golf(true);
+function playGolf(aroundCorner?: boolean, shouldLog?: boolean) {
+  const golf: Golf = new Golf(!!aroundCorner);
 
   while (golf.gameState === 'Playing') {
     shouldLog && console.log('\n' + golf.toString());
@@ -17,10 +17,11 @@ function playGolf(shouldLog: boolean) {
   return golf.gameState;
 }
 
-export function simulateRandomGames(n: number, shouldLog?: boolean): number {
+export function simulateRandomGames(n: number, aroundCorner?: boolean, shouldLog?: boolean): number {
   let wins = 0;
+
   for (let index = 0; index < n; index++) {
-    const result = playGolf(!!shouldLog);
+    const result = playGolf(aroundCorner, shouldLog);
     if (result === 'Won') wins++;
   }
 

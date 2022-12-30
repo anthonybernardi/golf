@@ -1,7 +1,7 @@
 import { GameState, Golf } from './golf';
 
-export function bruteForce(): GameState {
-  const golfStack: Golf[] = [new Golf(true)];
+export function bruteForce(aroundCorner?: boolean): GameState {
+  const golfStack: Golf[] = [new Golf(!!aroundCorner)];
 
   while (golfStack.length > 0) {
     const last: Golf = golfStack.pop()!;
@@ -25,10 +25,10 @@ export function bruteForce(): GameState {
   return 'Lost';
 }
 
-export function bruteForceGames(n: number): number {
+export function bruteForceGames(n: number, aroundCorner?: boolean): number {
   let won = 0;
   for (let i = 0; i < n; i++) {
-    const state = bruteForce();
+    const state = bruteForce(aroundCorner);
     if (state === 'Won') won++;
   }
   return won;
