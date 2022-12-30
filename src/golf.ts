@@ -110,4 +110,30 @@ export class Golf {
 
     return output;
   }
+
+  public clone(): Golf {
+    const clone: Golf = new Golf();
+    const clonedCards: Card[] = [...this.deck.cards];
+
+    const clonedDeck: Deck = new Deck();
+    clonedDeck.cards = clonedCards;
+    clone.deck = clonedDeck;
+
+    clone.aroundCorner = this.aroundCorner;
+    clone.gameState = this.gameState;
+
+    const clonedFoundation: Card[] = [...this.foundation];
+    clone.foundation = clonedFoundation;
+
+    const clonedHoles: Card[][] = [];
+
+    for (let i = 0; i < this.holes.length; i++) {
+      const clonedHole: Card[] = [...this.holes[i]];
+      clonedHoles.push(clonedHole);
+    }
+
+    clone.holes = clonedHoles;
+
+    return clone;
+  }
 }
