@@ -1,17 +1,5 @@
-import { Card, Deck } from './src/deck';
-import { Golf, validMove } from './src/golf';
+import { simulateRandomGames } from './src/simulate-random';
 
-const golf: Golf = new Golf(true);
+const won = simulateRandomGames(1000);
 
-while (golf.gameState === 'Playing') {
-  try {
-    console.log(golf.toString());
-    console.log('\n\n');
-    const moves: number[] = golf.getValidMoves();
-    if (moves.length > 0) {
-      golf.play(moves[Math.floor(Math.random() * moves.length)]);
-    } else {
-      golf.draw();
-    }
-  } catch (e: unknown) {}
-}
+console.log(`won: ${won}`);

@@ -57,15 +57,13 @@ export class Golf {
     targetHole.pop();
     this.foundation.push(targetCard);
 
-    const cardsLeftInHoles = this.getCardsLeftInHoles();
-    if (cardsLeftInHoles === 0 || (this.getValidMoves().length === 0 && this.deck.cards.length === 0)) {
-      this.gameState = cardsLeftInHoles > 0 ? 'Lost' : 'Won';
-    }
+    this.updateGameStatus();
   }
 
   public draw() {
     if (this.deck.cards.length === 0) throw new Error('The deck is empty!');
     this.foundation.push(this.deck.next());
+    this.updateGameStatus();
   }
 
   /**
@@ -86,16 +84,25 @@ export class Golf {
     return this.holes.reduce((partialSum: number, currentHole: Card[]) => partialSum + currentHole.length, 0);
   }
 
+  public updateGameStatus() {
+    const cardsLeftInHoles = this.getCardsLeftInHoles();
+    if (cardsLeftInHoles === 0 || (this.getValidMoves().length === 0 && this.deck.cards.length === 0)) {
+      this.gameState = cardsLeftInHoles > 0 ? 'Lost' : 'Won';
+    }
+  }
+
   public toString() {
     let output = '';
 
     output += '[1]\t[2]\t[3]\t[4]\t[5]\t[6]\t[7]\n';
     for (let i = 0; i < 5; i++) {
+      let line = '';
       for (let j = 0; j < 7; j++) {
         const card = this.holes[j][i];
-        output += (card ? card.toString() : '') + '\t';
+        line += (card ? card.toString() : '') + '\t';
       }
-      output += '\n';
+
+      if (line.trim() !== '') output += line + '\n';
     }
     output += '\n';
     output += `Cards Left: ${this.deck.cards.length}\n`;
